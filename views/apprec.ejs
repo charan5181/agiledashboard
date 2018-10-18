@@ -1,0 +1,18 @@
+<h2>  Appreciations  </h2>
+<form action="/newtodo" method="POST">
+<textarea id="note" type= "text" name="item5" placeholder="Enter Feedback"></textarea>
+<span><button class="btn btn-primary" type ="submit">Submit</button></span>
+
+</form>
+
+<ul>
+          
+    <%  for(var i = 0; i<appreclist.length;i++){  %>
+         <li><form action="/update/<%= appreclist[i]._id %>" method="POST">
+              <textarea id="note" name="item4"><%= appreclist[i].name %></textarea> 
+              <div style="display: inline-block"><button class="btn dynamic-button" type="submit">Save</button></form>
+              <a class="btn btn-raised btn-danger" href="/delete/<%= appreclist[i]._id %>">Delete</a>
+             </div>
+         </li>
+  <%}%>
+   </ul>
