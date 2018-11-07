@@ -6,49 +6,159 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <link href="/css/style.css" rel="stylesheet" />
       <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-<!-- jQuery library -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-<!-- Latest compiled JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <!-- jQuery library -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <!-- Latest compiled JavaScript -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      <script src="./xlsx.full.min.js"></script>
+      <script src="https://fastcdn.org/FileSaver.js/1.1.20151003/FileSaver.min.js"></script>
+      <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
    </head>
    <body background="images/Capture.JPG">
-    <div  class="container">
-       <h1 style="text-align:center">Retro Dashboard</h1>
-    <div style="display: flex; justify-content: space-around" > 
-    <div>
-        <h2>  What Went Well   </h2>
-   	<form action="/newtodo" method="POST">
-       <textarea id="note" type= "text" name="item1" placeholder="Enter Feedback"></textarea>
-       <span><button class="btn btn-primary" type ="submit">Submit</button></span>
-
-   	</form>
-   	
-      <ul>
-          
-       <%  for(var i = 0; i<todolist.length;i++){  %>
-            <li><form action="/update/<%= todolist[i]._id %>" method="POST">
-                 <textarea id="note" name="item"><%= todolist[i].name %></textarea> 
-                 <div style="display: inline-block"><button class="btn dynamic-button" type="submit">Save</button></form>
-                 <a class="btn btn-raised btn-danger" href="/delete/<%= todolist[i]._id %>">Delete</a>
-                </div>
-            </li>
-     <%}%>
-      </ul>
-    
-    </div> 
-    <div>
-        <% include action %>
+      <div  class="container">
+         <h1 style="text-align:center">Retro Dashboard</h1>
+         <div style="float: right"><button class= "ht" id="button-a" title="Download Report"><img class="ht" src="./images/icons8-download-50.png"></button></div>
+         <div style="display: flex; justify-content: space-around" >
+            <div>
+               <h2>  What Went Well   </h2>
+               <form action="/newtodo" method="POST">
+                  <textarea id="note" type= "text" name="item1" placeholder="Enter Feedback"></textarea>
+                  <span><button class="btn btn-primary" type ="submit">Submit</button></span>
+               </form>
+               <ul>
+                  <%  for(var i = 0; i<todolist.length;i++){  %>
+                  <li>
+                     <form action="/update/<%= todolist[i]._id %>" method="POST">
+                        <textarea id="note" name="item"><%= todolist[i].name %></textarea>
+                        <div style="display: inline-block"><button class="btn dynamic-button" type="submit">Save</button>
+                     </form>
+                     <a class="btn btn-raised btn-danger" href="/delete/<%= todolist[i]._id %>">Delete</a>
+                     </div>
+                  </li>
+                  <%}%>
+               </ul>
+            </div>
+            <div>
+               <h2>  Action Items To </h2>
+               <% include action %>
+            </div>
+            <div>
+               <h2>  Appreciations </h2>
+               <% include apprec %>
+            </div>
+         </div>
+         <div id="myDiv" style="width:500px;height:400px">
+            <!-- Plotly chart will be drawn inside this DIV -->
+         </div>
+      </div>
+      <script>
+         var obj = <%- JSON.stringify(todolist)%>;
+         var actionobj = <%- JSON.stringify(actionlist)%>;
+         var apprecobj = <%- JSON.stringify(appreclist)%>;
+         var todoarr = [];
+         var actionarr = [];
+         var apprecarr = [];
+         for (var key in obj) {
+         if (obj.hasOwnProperty(key)) {
+         todoarr.push(obj[key].name);
          
-         </div> 
-         <div>
-            <% include apprec %>
-             
-             </div> 
-    </div>
-       <!-- <script type="text/javascript" src="client.js"></script> -->
-    </div>
+         }
+         }
+         for (var key in actionobj) {
+         if (actionobj.hasOwnProperty(key)) {
+            actionarr.push(actionobj[key].name);
+         
+         }
+         }
+         for (var key in apprecobj) {
+         if (apprecobj.hasOwnProperty(key)) {
+            apprecarr.push(apprecobj[key].name);
+         
+         }
+         }
+         
+         
+         
+         var wb = XLSX.utils.book_new();
+         wb.Props = {
+         Title: "SheetJS Tutorial",
+         Subject: "Test"
+         };
+         
+         wb.SheetNames.push("What Went Well");
+         wb.SheetNames.push("Action Items");
+         wb.SheetNames.push("Appreciations")
+         var todoarr1 = [];
+         var actionarr1 = [];
+         var apprecarr1 = [];
+         for (var i = 0; i < todoarr.length; i++) {
+         var key = "Values";
+         var obj1 = {};
+         obj1[key] = todoarr[i];
+         todoarr1.push(obj1);
+         }
+         for (var i = 0; i < actionarr.length; i++) {
+         var key = "Values";
+         var obj1 = {};
+         obj1[key] = actionarr[i];
+         actionarr1.push(obj1);
+         }
+         for (var i = 0; i < apprecarr.length; i++) {
+         var key = "Values";
+         var obj1 = {};
+         obj1[key] = apprecarr[i];
+         apprecarr1.push(obj1);
+         }
+         
+         var ws_data = todoarr1;
+         var ws_data1 = actionarr1;
+         var ws_data2 = apprecarr1;
+         var ws = XLSX.utils.json_to_sheet(ws_data);
+         var ws1 = XLSX.utils.json_to_sheet(ws_data1);
+         var ws2 = XLSX.utils.json_to_sheet(ws_data2);
+         wb.Sheets["What Went Well"] = ws;
+         wb.Sheets["Action Items"] = ws1;
+         wb.Sheets["Appreciations"] = ws2;
+         var wbout = XLSX.write(wb, {
+         bookType: 'xlsx',
+         type: 'binary'
+         });
+         
+         function s2ab(s) {
+         
+         var buf = new ArrayBuffer(s.length);
+         var view = new Uint8Array(buf);
+         for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+         return buf;
+         
+         }
+         $("#button-a").click(function () {
+         saveAs(new Blob([s2ab(wbout)], {
+         type: "application/octet-stream"
+         }), 'RetroDashboard.xlsx');
+         
+         });
+         
+         //Auto resizing of text area
+         $('textarea').each(function () {
+  this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+}).on('input', function () {
+  this.style.height = '100px';
+  this.style.height = (this.scrollHeight) + 'px';
+});
+         
+         
+      </script>
+      <script>var data = [{
+         x: ['What Went Well', 'Actions', 'Appreciations'],
+         y: [todoarr.length, actionarr.length, apprecarr.length],
+         type: 'bar'
+         }];
+         var layout = {
+           title: 'Retro Graph'
+         };
+         Plotly.newPlot('myDiv', data, layout);
+      </script>
    </body>
 </html>

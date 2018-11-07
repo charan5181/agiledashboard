@@ -3,7 +3,8 @@ body{
 }
 
 textarea#note {
-	width:90%;
+	width:140%;
+	height: 100px;
     direction:ltl;
 	display:block;
 	line-height:1.5;
@@ -13,10 +14,18 @@ textarea#note {
 	font:13px Tahoma, cursive;
 	transition:box-shadow 0.5s ease;
 	box-shadow:0 4px 6px rgba(0,0,0,0.1);
-	font-smoothing:subpixel-antialiased;
 	background:linear-gradient(#F9EFAF, #F7E98D);
 	background:-o-linear-gradient(#F9EFAF, #F7E98D);
 	background:-ms-linear-gradient(#F9EFAF, #F7E98D);
 	background:-moz-linear-gradient(#F9EFAF, #F7E98D);
 	background:-webkit-linear-gradient(#F9EFAF, #F7E98D);
+}
+
+button.ht{
+  height: 30px;
+  background-color: white;
+}
+img.ht{
+
+	height: 20px;
 }
