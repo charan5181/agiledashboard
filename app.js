@@ -18,24 +18,33 @@ app.use(bodyParser.urlencoded({
 
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/todo', {
 	useNewUrlParser: true
+}).catch((e)=>{
+	console.log("Mongoose DB not connected");
 });
 
 //mongoose schema
 
 var todoschema = new mongoose.Schema({
-	name: String
+	name: String,
+	like: {type:Number, default: 0},
+	dislike: {type:Number, default: 0} 
 });
 var actionschema = new mongoose.Schema({
-	name: String
+	name: String,
+	like: {type:Number, default: 0},
+	dislike: {type:Number, default: 0}
 });
 var apprecschema = new mongoose.Schema({
-	name: String
+	name: String,
+	like: {type:Number, default: 0},
+	dislike: {type:Number, default: 0}
 });
-
 
 var todo = mongoose.model("todo", todoschema);
 var action = mongoose.model("action", actionschema);
 var apprec = mongoose.model("apprec", apprecschema);
+var inc =0;
+var dec=0;
 
 app.get('/', (req, res) => {
 	todo.find({}, (err, todolist) => {
@@ -48,7 +57,9 @@ app.get('/', (req, res) => {
 				});
 			});
 		});
-	});
+	}).catch((e)=>{
+        console.log(e);
+	}); 
 
 });
 
@@ -72,13 +83,15 @@ app.post('/newtodo', (req, res) => {
 	} else {};
 	if (req.body.item3 != undefined) {
 		action.create(newitem1, (err, action) => {
-
+			if (err) console.log(err)
+			else {}
 		});
 	} else {};
 	res.redirect('/');
 	if (req.body.item5 != undefined) {
 		apprec.create(newitem2, (err, apprec) => {
-
+			if (err) console.log(err)
+			else {}
 		});
 	} else {};
 	res.redirect('/');
@@ -92,6 +105,8 @@ app.get('/delete/:id', (req, res) => {
 			console.log('no error');
 		}
 		res.redirect('/');
+	}).catch((e)=>{
+		console.log("Error in delete route"+ e);
 	});
 
 	action.findByIdAndRemove(id).then((action) => {
@@ -99,14 +114,33 @@ app.get('/delete/:id', (req, res) => {
 			console.log('no error');
 		}
 		res.redirect('/');
+	}).catch((e)=>{
+		console.log("Error in delete route");
 	});
 	apprec.findByIdAndRemove(id).then((apprec) => {
 		if (!apprec) {
 			console.log('no error');
 		}
 		res.redirect('/');
+	}).catch((e)=>{
+		console.log("Error in delete route");
 	});
 
+
+});
+
+app.post('/like/:id', (req,res) => {
+	var id = req.params.id;
+	 inc += parseFloat(req.body.changeBy);
+	 todo.findByIdAndUpdate(id, {
+		$set: {
+			like: inc
+		}
+	}, {
+		new: true
+	}).then((todo) => {
+        
+	});
 
 });
 

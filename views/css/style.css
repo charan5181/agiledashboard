@@ -3,9 +3,8 @@ body{
 }
 
 textarea#note {
-	width:140%;
+	
 	height: 100px;
-    direction:ltl;
 	display:block;
 	line-height:1.5;
 	padding:15px 15px 30px;
@@ -25,7 +24,19 @@ button.ht{
   height: 30px;
   background-color: white;
 }
+button#im{
+	height: 24px;
+	width: 24px;
+	padding: 0px;
+}
+button#im1{
+	height: 24px;
+	width: 24px;
+	padding: 0px;
+}
 img.ht{
-
 	height: 20px;
 }
+
+
+

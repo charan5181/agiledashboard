@@ -12,6 +12,8 @@
               <textarea id="note" name="item4"><%= appreclist[i].name %></textarea> 
               <div style="display: inline-block"><button class="btn dynamic-button" type="submit">Save</button></form>
               <a class="btn btn-raised btn-danger" href="/delete/<%= appreclist[i]._id %>">Delete</a>
+              <span><button id="im" class="w3-button w3-xsmall w3-teal">+</button>
+                <button id="im1" class="w3-button w3-xsmall w3-red w3-card-4">-</button></span>
              </div>
          </li>
   <%}%>

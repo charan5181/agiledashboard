@@ -14,12 +14,13 @@
       <script src="./xlsx.full.min.js"></script>
       <script src="https://fastcdn.org/FileSaver.js/1.1.20151003/FileSaver.min.js"></script>
       <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+      <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
    </head>
    <body background="images/Capture.JPG">
       <div  class="container">
          <h1 style="text-align:center">Retro Dashboard</h1>
          <div style="float: right"><button class= "ht" id="button-a" title="Download Report"><img class="ht" src="./images/icons8-download-50.png"></button></div>
-         <div style="display: flex; justify-content: space-around" >
+         <div style="display: flex; justify-content:space-evenly" >
             <div>
                <h2>  What Went Well   </h2>
                <form action="/newtodo" method="POST">
@@ -34,6 +35,8 @@
                         <div style="display: inline-block"><button class="btn dynamic-button" type="submit">Save</button>
                      </form>
                      <a class="btn btn-raised btn-danger" href="/delete/<%= todolist[i]._id %>">Delete</a>
+                     <span><button id="im" articleID="<%= todolist[i]._id %>" class="w3-button w3-xsmall w3-teal">+</button><span id="lk" class="badge"><%= todolist[i].like %></span>
+                      <button id="im1" articleID="<%= todolist[i]._id %>" class="w3-button w3-xsmall w3-red w3-card-4">-</button><span id="dlk" class="badge"><%= todolist[i].dislike %></span></span>
                      </div>
                   </li>
                   <%}%>
@@ -142,14 +145,15 @@
          
          //Auto resizing of text area
          $('textarea').each(function () {
-  this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
-}).on('input', function () {
-  this.style.height = '100px';
-  this.style.height = (this.scrollHeight) + 'px';
-});
+          this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+         }).on('input', function () {
+          this.style.height = '100px';
+          this.style.height = (this.scrollHeight) + 'px';
+         });
          
          
       </script>
+
       <script>var data = [{
          x: ['What Went Well', 'Actions', 'Appreciations'],
          y: [todoarr.length, actionarr.length, apprecarr.length],
@@ -159,6 +163,36 @@
            title: 'Retro Graph'
          };
          Plotly.newPlot('myDiv', data, layout);
+      </script>
+
+      <script>
+        function setLike(articleID) {
+    document.cookie=articleID+'=y';
+}
+
+function hasLiked(articleID) {
+    var cookies=document.cookie.split(';');
+    for (var i=0;i<cookies.length;i++) {
+        var cookie=cookies[i].split('=');
+        if (cookie[0]==articleID) return true;
+    }
+    return false;
+}
+
+var button=document.getElementById('im');
+
+button.onclick=function() {
+    var articleID=this.getAttribute('articleID');
+    if (!hasLiked(articleID)) {
+        //register the like in your system
+        $.post("/like/articleID",{changeBy: 1});
+         
+        setLike(articleID);
+    } else {
+        alert('You cant like or dislike an article twice');
+    }
+}
+        
       </script>
    </body>
 </html>
