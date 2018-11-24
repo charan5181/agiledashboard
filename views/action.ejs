@@ -1,21 +1,26 @@
 
 
 <form action="/newtodo" method="POST">
-<textarea id="note" type= "text" name="item3" placeholder="Enter Feedback"></textarea>
+<textarea cols="37" id="note" type= "text" name="item3" placeholder="Enter Feedback"></textarea>
 <span><button class="btn btn-primary" type ="submit">Submit</button></span>
 
 </form>
-
-<ul>
+<div class="list-type3">
+<ul style="list-style-type:none">
           
     <%  for(var i = 0; i<actionlist.length;i++){  %>
          <li><form action="/update/<%= actionlist[i]._id %>" method="POST">
-              <textarea id="note" name="item2"><%= actionlist[i].name %></textarea> 
+              <textarea cols="30" id="note" name="item2"><%= actionlist[i].name %></textarea> 
               <div style="display: inline-block"><button class="btn dynamic-button" type="submit">Save</button></form>
-              <a class="btn btn-raised btn-danger" href="/delete/<%= actionlist[i]._id %>">Delete</a>
-              <span><button id="im" class="w3-button w3-xsmall w3-teal">+</button>
-                <button id="im1" class="w3-button w3-xsmall w3-red w3-card-4">-</button></span>
+              <a class="btn btn-raised btn-danger" href="/delete/<%= actionlist[i]._id %>">Delete</a><br>
+              <form action="/like/<%= actionlist[i]._id %>" method="post" style="display: inline-block">
+                <button id="im" articleID="<%= actionlist[i]._id %>" class="w3-button w3-xsmall w3-teal">+</button><span id="lk" class="badge"><%= actionlist[i].like %></span>
+            </form>
+            <form action="/dislike/<%= actionlist[i]._id %>" method="post" style="display: inline-block">
+              <button id="im1" articleID="<%= actionlist[i]._id %>" class="w3-button w3-xsmall w3-red w3-card-4">-</button><span id="dlk" class="badge"><%= actionlist[i].dislike %></span>
+            </form>
              </div>
          </li>
   <%}%>
    </ul>
+</div>

@@ -43,8 +43,7 @@ var apprecschema = new mongoose.Schema({
 var todo = mongoose.model("todo", todoschema);
 var action = mongoose.model("action", actionschema);
 var apprec = mongoose.model("apprec", apprecschema);
-var inc =0;
-var dec=0;
+
 
 app.get('/', (req, res) => {
 	todo.find({}, (err, todolist) => {
@@ -131,17 +130,36 @@ app.get('/delete/:id', (req, res) => {
 
 app.post('/like/:id', (req,res) => {
 	var id = req.params.id;
-	 inc += parseFloat(req.body.changeBy);
-	 todo.findByIdAndUpdate(id, {
-		$set: {
-			like: inc
-		}
-	}, {
-		new: true
-	}).then((todo) => {
-        
-	});
+	 todo.findByIdAndUpdate(id, { $inc: {like: 1}},{new:true}).then((todolist)=>{
+			 console.log(todolist.like);
+			 res.redirect('/');
+			
+	 });
 
+	 action.findByIdAndUpdate(id, {$inc: {like: 1}},{new:true}).then((actionlist)=>{
+			console.log(actionlist.like);
+			res.redirect('/');
+	 });
+
+	 apprec.findByIdAndUpdate(id, {$inc: {like: 1}},{new: true}).then((appreclist)=>{
+           res.redirect('/');
+	 });
+});
+
+app.post('/dislike/:id', (req,res) => {
+	var id = req.params.id;
+	todo.findByIdAndUpdate(id, { $inc: {dislike: 1}},{new:true}).then((todolist)=>{
+		  console.log(todolist.dislike);
+		  res.redirect('/');
+	});
+	action.findByIdAndUpdate(id, {$inc: {dislike: 1}},{new:true}).then((actionlist)=>{
+		console.log(actionlist.like);
+		res.redirect('/');
+ });
+
+ apprec.findByIdAndUpdate(id, {$inc: {dislike: 1}},{new: true}).then((appreclist)=>{
+	   res.redirect('/');
+ });
 });
 
 app.post('/update/:id', (req, res) => {
